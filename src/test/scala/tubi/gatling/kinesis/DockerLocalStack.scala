@@ -1,11 +1,11 @@
 package tubi.gatling.kinesis
 
 import com.whisk.docker.impl.spotify.DockerKitSpotify
-import com.whisk.docker.{ DockerContainer, DockerKit, DockerReadyChecker, LogLineReceiver }
+import com.whisk.docker.{ DockerContainer, DockerKit, DockerReadyChecker }
 
 trait DockerLocalStack extends DockerKit with DockerKitSpotify {
-  private final val dockerImage        = "localstack/localstack:0.10.6"
-  protected final val kinesisLocalPort = 4568
+  private final val dockerImage  = "localstack/localstack:0.10.6"
+  protected val kinesisLocalPort = 4568
 
   /**
     * Decimal value between 0.0 (default) and 1.0 to randomly inject ProvisionedThroughputExceededException errors into

@@ -5,7 +5,6 @@ import io.gatling.core.action.Action
 import io.gatling.core.session.{ Expression, Session }
 import io.gatling.core.stats.StatsEngine
 import io.gatling.core.structure.ScenarioContext
-import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.services.kinesis.model.{ PutRecordRequest, PutRecordResponse }
 import tubi.gatling.kinesis.protocol.KinesisProtocol
 

@@ -17,7 +17,6 @@ lazy val `gatling-kinesis` =
         library.awsStsSdk
       ) ++ library.dockerTestKit
     )
-//    .settings(inConfig(Gatling)(Defaults.testSettings))
 // *****************************************************************************
 // Library dependencies
 // *****************************************************************************

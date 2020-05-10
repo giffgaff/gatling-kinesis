@@ -1,14 +1,13 @@
 package tubi.gatling.kinesis.action
 
 import io.gatling.commons.stats.{ KO, OK }
-import io.gatling.commons.validation.Validation
 import io.gatling.core.action.ChainableAction
 import io.gatling.core.session.{ Expression, Session }
 import io.gatling.core.stats.StatsEngine
 import io.gatling.core.util.NameGen
 import software.amazon.awssdk.services.kinesis.model.KinesisResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.ExecutionContext
 import scala.util.{ Failure, Success, Try }
 
 /**

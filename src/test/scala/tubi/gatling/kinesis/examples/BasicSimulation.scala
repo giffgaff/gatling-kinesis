@@ -5,9 +5,9 @@ import tubi.gatling.kinesis.BaseKinesisSimulation
 import tubi.gatling.kinesis.Predef._
 import tubi.gatling.kinesis.protocol.KinesisProtocol
 
+// you can run this in sbt with gatling:test
 class BasicSimulation extends BaseKinesisSimulation {
-
-  val kinesisConfig: KinesisProtocol        = kinesis(kinesisLocalClientBuilder)
+  val kinesisConfig: KinesisProtocol        = kinesis(kinesisLocalClientBuilder(kinesisLocalPort))
   override protected val streamName: String = "some-stream"
 
   val testScenario = scenario("showcase kinesis plugin")

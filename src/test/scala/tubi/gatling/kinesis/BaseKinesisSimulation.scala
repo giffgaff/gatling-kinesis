@@ -1,7 +1,6 @@
 package tubi.gatling.kinesis
 
 import java.net.URI
-import java.util.UUID
 
 import com.typesafe.scalalogging.LazyLogging
 import io.gatling.core.Predef.Simulation
@@ -23,13 +22,8 @@ abstract class BaseKinesisSimulation extends Simulation with DockerLocalStack wi
   System.setProperty("aws.cborEnabled", "false")
 
   // having a sync client is handy for doing maintenance operations like creating/destroying streams
-  final val kinesisSyncClient: KinesisClient = KinesisClient
-    .builder()
-    .endpointOverride(new URI(s"http://localhost:$kinesisLocalPort"))
-    .credentialsProvider(
-      StaticCredentialsProvider.create(AwsBasicCredentials.create("abc", "abcd"))
-    )
-    .build()
+  final val kinesisSyncClient: KinesisClient =
+    kinesisLocalSyncClientBuilder(kinesisLocalPort).build()
   protected val streamName: String
 
   before {
@@ -51,15 +45,28 @@ abstract class BaseKinesisSimulation extends Simulation with DockerLocalStack wi
     * Helper method to create a Kinesis async client specifically for testing against mock kinesis running on localhost
     * @return
     */
-  def kinesisLocalClientBuilder =
+  def kinesisLocalClientBuilder(kinesisLocalPort: Int) =
     KinesisAsyncClient
       .builder()
       .endpointOverride(new URI(s"http://localhost:$kinesisLocalPort"))
       .httpClientBuilder(
         NettyNioAsyncHttpClient
           .builder()
-          .protocol(Protocol.HTTP1_1)
+          .protocol(Protocol.HTTP1_1) // localstack does not support http/2 as of now
       )
+      .credentialsProvider(
+        // pass in some static credentials to make sure AWS SDK does not try to get smart with whatever other
+        // credentials you have on your local machine
+        StaticCredentialsProvider.create(AwsBasicCredentials.create("abc", "abcd"))
+      )
+
+  /**
+    * Same as `kinesisLocalClientBuilder` but builds a synchronous client that is easier to use during testing
+    */
+  def kinesisLocalSyncClientBuilder(kinesisLocalPort: Int) =
+    KinesisClient
+      .builder()
+      .endpointOverride(new URI(s"http://localhost:$kinesisLocalPort"))
       .credentialsProvider(
         StaticCredentialsProvider.create(AwsBasicCredentials.create("abc", "abcd"))
       )

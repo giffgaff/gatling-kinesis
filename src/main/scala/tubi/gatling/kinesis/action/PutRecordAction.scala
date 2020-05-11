@@ -1,4 +1,5 @@
 package tubi.gatling.kinesis.action
+
 import io.gatling.commons.util.Clock
 import io.gatling.commons.validation.Validation
 import io.gatling.core.action.Action
@@ -26,16 +27,17 @@ case class PutRecordAction(
   override def name: String = genName("kinesisPutRecord")
 
   override def execute(session: Session): Unit = {
-    logger.info("executing put record action")
     val start = clock.nowMillis
+    logger.trace("executing put record action")
 
     val resp: Validation[Future[PutRecordResponse]] = for {
-      pKey <- reqBuilder.partitionKey.get.apply(session)
+      pKey    <- reqBuilder.partitionKey.get.apply(session)
+      payload <- reqBuilder.data.get.apply(session)
     } yield {
       val req = PutRecordRequest
         .builder()
         .streamName(reqBuilder.streamName)
-        .data(reqBuilder.data.get)
+        .data(payload)
         .partitionKey(pKey)
         .build()
 
@@ -43,8 +45,15 @@ case class PutRecordAction(
     }
 
     implicit val ec: ExecutionContextExecutor = ctx.coreComponents.actorSystem.dispatcher
-    resp.foreach(_.onComplete { result =>
+
+    resp.onSuccess(_.onComplete { result =>
       next ! logResult(start, clock.nowMillis, result, requestName, session, statsEngine)
     })
+
+    resp.onFailure { s =>
+      // this scenario shouldn't really happen unless somehow we couldn't even construct the future
+      logger.error("Failed to even make a request, error={}", s)
+      next ! session.markAsFailed
+    }
   }
 }

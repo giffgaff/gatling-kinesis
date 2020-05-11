@@ -1,6 +1,7 @@
 package tubi.gatling.kinesis.examples
 
 import io.gatling.core.Predef._
+import software.amazon.awssdk.core.SdkBytes
 import tubi.gatling.kinesis.BaseKinesisSimulation
 import tubi.gatling.kinesis.Predef._
 import tubi.gatling.kinesis.protocol.KinesisProtocol
@@ -15,7 +16,7 @@ class BasicSimulation extends BaseKinesisSimulation {
       kinesis("single record")
         .stream(streamName)
         .putRecord()
-        .payload("test body")
+        .payload(SdkBytes.fromUtf8String("test body"))
         .partitionKey("test pkey")
     )
 

@@ -1,3 +1,4 @@
+import xerial.sbt.Sonatype.GitHubHosting
 
 lazy val `gatling-kinesis` =
   project
@@ -54,9 +55,7 @@ lazy val library =
 // Settings
 // *****************************************************************************
 
-lazy val settings =
-  commonSettings ++
-    scalafmtSettings
+lazy val settings = commonSettings ++ publishSettings ++ scalafmtSettings
 
 lazy val commonSettings =
   Seq(
@@ -79,4 +78,12 @@ lazy val commonSettings =
 lazy val scalafmtSettings =
   Seq(
     scalafmtOnCompile := true,
+  )
+
+lazy val publishSettings =
+  Seq(
+    publishTo := sonatypePublishToBundle.value,
+    sonatypeProfileName := "com.tubitv",
+    publishMavenStyle := true,
+    sonatypeProjectHosting := Some(GitHubHosting("tubitv", "gatling-kinesis", "marios@tubi.tv"))
   )

@@ -7,8 +7,8 @@ lazy val `gatling-kinesis` =
     .settings(settings)
     .settings(
       name := "gatling-kinesis-alex",
-      version:= "0.0.3",
-      scalaVersion := "2.13.14",
+      version:= "0.0.5",
+      scalaVersion := "2.13.16",
       libraryDependencies ++= Seq(
       library.scalaCheck % Test,
       library.scalaTest % Test,
@@ -18,7 +18,8 @@ lazy val `gatling-kinesis` =
       library.gatlingCore,
       library.awsSdkCore,
       library.awsKinesisSdk,
-      library.awsStsSdk
+      library.awsStsSdk,
+      library.scalaJavaCompat,
     ) ++ library.dockerTestKit
     )
 // *****************************************************************************
@@ -32,7 +33,7 @@ lazy val library =
       val scalaCheck = "1.14.3"
       val scalaTest = "3.1.1"
       val scalaTestPlusScalaCheck = "3.1.1.1"
-      val gatlingVersion = "3.11.4"
+      val gatlingVersion = "3.13.4"
       val awsSdk = "2.11.12"
       val dockerTestKit = "0.9.9"
     }
@@ -47,6 +48,8 @@ lazy val library =
     val gatlingCore = "io.gatling" % "gatling-core" % Version.gatlingVersion
     val gatlingHighCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % Version.gatlingVersion
     val gatlingTestFramework = "io.gatling" % "gatling-test-framework" % Version.gatlingVersion
+
+    val scalaJavaCompat = "org.scala-lang.modules" %% "scala-java8-compat" % "1.0.2"
 
     val dockerTestKit = Seq(
       "com.whisk" %% "docker-testkit-scalatest" % Version.dockerTestKit % "test",

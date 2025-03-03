@@ -10,7 +10,7 @@ import software.amazon.awssdk.services.kinesis.model.{ PutRecordRequest, PutReco
 import tubi.gatling.kinesis.protocol.KinesisProtocol
 
 import scala.compat.java8.FutureConverters._
-import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.concurrent.{ ExecutionContext, Future }
 
 case class PutRecordAction(
     requestName: Expression[String],
@@ -44,7 +44,7 @@ case class PutRecordAction(
       kinesisComponents.kinesisClient.putRecord(req).toScala
     }
 
-    implicit val ec: ExecutionContextExecutor = ctx.coreComponents.actorSystem.dispatcher
+    implicit val ec: ExecutionContext = ctx.coreComponents.actorSystem.executionContext
 
     resp.onSuccess(_.onComplete { result =>
       next ! logResult(start, clock.nowMillis, result, requestName, session, statsEngine)

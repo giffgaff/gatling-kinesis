@@ -6,17 +6,20 @@ lazy val `gatling-kinesis` =
     .enablePlugins(GatlingPlugin)
     .settings(settings)
     .settings(
+      name := "gatling-kinesis-alex",
+      version:= "0.0.3",
+      scalaVersion := "2.13.14",
       libraryDependencies ++= Seq(
-        library.scalaCheck % Test,
-        library.scalaTest % Test,
-        library.scalaTestPlusScalaCheck % Test,
-        library.gatlingHighCharts % Test,
-        library.gatlingTestFramework % Test,
-        library.gatlingCore,
-        library.awsSdkCore,
-        library.awsKinesisSdk,
-        library.awsStsSdk
-      ) ++ library.dockerTestKit
+      library.scalaCheck % Test,
+      library.scalaTest % Test,
+      library.scalaTestPlusScalaCheck % Test,
+      library.gatlingHighCharts % Test,
+      library.gatlingTestFramework % Test,
+      library.gatlingCore,
+      library.awsSdkCore,
+      library.awsKinesisSdk,
+      library.awsStsSdk
+    ) ++ library.dockerTestKit
     )
 // *****************************************************************************
 // Library dependencies
@@ -29,7 +32,7 @@ lazy val library =
       val scalaCheck = "1.14.3"
       val scalaTest = "3.1.1"
       val scalaTestPlusScalaCheck = "3.1.1.1"
-      val gatlingVersion = "3.3.1"
+      val gatlingVersion = "3.11.4"
       val awsSdk = "2.11.12"
       val dockerTestKit = "0.9.9"
     }
@@ -55,15 +58,15 @@ lazy val library =
 // Settings
 // *****************************************************************************
 
-lazy val settings = commonSettings ++ publishSettings ++ scalafmtSettings
+lazy val settings = commonSettings ++ scalafmtSettings
 
 lazy val commonSettings =
   Seq(
     // scalaVersion from .travis.yml via sbt-travisci
     // scalaVersion := "2.13.1",
-    organization := "tubi",
-    organizationName := "Marios",
-    startYear := Some(2020),
+    organization := "com.giffgaff",
+    organizationName := "giffgaff",
+    startYear := Some(2025),
     licenses += ("MIT", url("https://opensource.org/licenses/MIT")),
     scalacOptions ++= Seq(
       "-unchecked",
@@ -79,11 +82,25 @@ lazy val scalafmtSettings =
   Seq(
     scalafmtOnCompile := true,
   )
+//
+//lazy val publishSettings =
+//  Seq(
+//    publishTo := sonatypePublishToBundle.value,
+//    sonatypeProfileName := "com.giffgaff",
+//    publishMavenStyle := true,
+//    sonatypeProjectHosting := Some(GitHubHosting("giffgaff", "gatling-kinesis", "alexanderb@giffgaff.co.uk"))
+//  )
 
-lazy val publishSettings =
-  Seq(
-    publishTo := sonatypePublishToBundle.value,
-    sonatypeProfileName := "com.tubitv",
-    publishMavenStyle := true,
-    sonatypeProjectHosting := Some(GitHubHosting("tubitv", "gatling-kinesis", "marios@tubi.tv"))
-  )
+ThisBuild / organization := "com.giffgaff"
+ThisBuild / organizationName := "giffgaff"
+ThisBuild / organizationHomepage := Some(url("https://github.com/giffgaff/gatling-kinesis"))
+
+publishTo := {
+  val localMavenRepo = Path.userHome.absolutePath + "/.m2/repository"
+  if (isSnapshot.value)
+    Some("snapshots" at "file://" + localMavenRepo)
+  else
+    Some("releases" at "file://" + localMavenRepo + "/releases")
+}
+
+publishMavenStyle := true

@@ -30,7 +30,26 @@ trait KinesisAction extends ChainableAction with NameGen {
 
     session.logGroupRequestTimings(start, end)
     requestName.apply(session).foreach { resolvedRequestName =>
-      statsEngine.logResponse(newSession, resolvedRequestName, start, end, status, None, message)
+      statsEngine.logResponse(
+        session.scenario,
+        session.groups,
+        resolvedRequestName,
+        start,
+        end,
+        status,
+        None,
+        message
+      )
+    //    statsEngine.logResponse(
+    //      session.scenario,
+    //      session.groups,
+    //      fullRequestName,
+    //      result.startTimestamp,
+    //      result.endTimestamp,
+    //      result.status,
+    //      None,
+    //      result.message
+    //    )
     }
     newSession
   }

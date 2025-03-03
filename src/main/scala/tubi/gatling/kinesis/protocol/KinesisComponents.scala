@@ -7,7 +7,7 @@ import software.amazon.awssdk.services.kinesis.{ KinesisAsyncClient, KinesisAsyn
 case class KinesisComponents(kinesisBuilder: KinesisAsyncClientBuilder) extends ProtocolComponents {
   lazy val kinesisClient: KinesisAsyncClient = kinesisBuilder.build()
 
-  override def onStart: Session => Session = ProtocolComponents.NoopOnStart
+  override def onStart: Session => Session = session => session
 
   override def onExit: Session => Unit = ProtocolComponents.NoopOnExit
 }
